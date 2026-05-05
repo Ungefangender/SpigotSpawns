@@ -125,30 +125,31 @@ public class SpawnCommand implements CommandExecutor {
         int warmupSeconds = plugin.getConfig().getInt("settings.warmup.seconds");
         String messageType = plugin.getConfig().getString("settings.warmup.messageType");
 
-        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            int secondsLeft = warmupSeconds;
+        final int[] secondsLeft = {warmupSeconds};
+        final int[] taskId = {0};
 
+        taskId[0] = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (secondsLeft <= 0) {
+                if (secondsLeft[0] <= 0) {
                     // Warmup finished - perform teleport
                     performTeleport(player, spawn, uuid);
                     warmupTasks.remove(uuid);
-                    Bukkit.getScheduler().cancelTask(this.hashCode());
+                    Bukkit.getScheduler().cancelTask(taskId[0]);
                     return;
                 }
 
                 // Send warmup message
                 String msg = getLanguageManager().getMessage("messages.warmup")
-                        .replace("%seconds%", String.valueOf(secondsLeft));
+                        .replace("%seconds%", String.valueOf(secondsLeft[0]));
                 sendMessage(player, msg, messageType);
                 playSound(player, "settings.warmup.sound");
 
-                secondsLeft--;
+                secondsLeft[0]--;
             }
         }, 0L, 20L);
 
-        warmupTasks.put(uuid, taskId);
+        warmupTasks.put(uuid, taskId[0]);
     }
 
     private void performTeleport(Player player, Location spawn, UUID uuid) {
@@ -185,30 +186,31 @@ public class SpawnCommand implements CommandExecutor {
             Bukkit.getScheduler().cancelTask(protectionTasks.get(uuid));
         }
 
-        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            int secondsLeft = protectionSeconds;
+        final int[] secondsLeft = {protectionSeconds};
+        final int[] taskId = {0};
 
+        taskId[0] = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                if (secondsLeft <= 0) {
-                    // Protection ended
+                if (secondsLeft[0] <= 0) {
+                    // Protection ended - send message and stop
                     protectedPlayers.remove(uuid);
                     player.sendMessage(getLanguageManager().getMessage("messages.protection-end"));
                     protectionTasks.remove(uuid);
-                    Bukkit.getScheduler().cancelTask(this.hashCode());
+                    Bukkit.getScheduler().cancelTask(taskId[0]);
                     return;
                 }
 
                 // Send protection message
                 String msg = getLanguageManager().getMessage("messages.protection")
-                        .replace("%seconds%", String.valueOf(secondsLeft));
+                        .replace("%seconds%", String.valueOf(secondsLeft[0]));
                 sendMessage(player, msg, messageType);
 
-                secondsLeft--;
+                secondsLeft[0]--;
             }
         }, 0L, 20L);
 
-        protectionTasks.put(uuid, taskId);
+        protectionTasks.put(uuid, taskId[0]);
     }
 
     public boolean isProtected(Player player) {
