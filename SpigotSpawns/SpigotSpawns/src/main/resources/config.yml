@@ -1,0 +1,105 @@
+# ================================== v26.2_1.0.0-BETA ==================================
+#           Created By: EinfachFabioo Version: 1.21.11 Last Update: 04/29/2026
+#              Download: https://modrinth.com/project/spigotspawns-v1.0.0
+# ================================== v26.2_1.0.0-BETA ==================================
+update-check:
+  enabled: true
+  interval-minutes: 15
+  notify-on-join: true
+  messageType: "chat" # chat / actionbar / console
+
+language: EN # Set the language the way you want
+languages-translated:
+  DE: German # translated
+  EN: English # translated
+  FR: French # translated
+  ES: Spanish # translated
+  IT: Italian # translated
+  NL: Dutch # translated
+  PL: Polish # translated
+  PT: Portuguese # translated
+  RU: Russian # translated
+  TR: Turkish # translated
+  CZ: Czech # translated
+  SK: Slovak # translated
+  HU: Hungarian # translated
+  RO: Romanian # translated
+  BG: Bulgaria # translaled
+  GR: Greek # translated
+  SE: Swedish # translated
+  NO: Norway # translated
+  DK: Danish # translated
+  FI: Finnish # translated
+
+# you need to add the permission manuelly to luckperms to see these perms!
+# (f.e: /lp group default permission set spigotspawns.admin true)
+permissions:
+  admin: "spigotspawns.admin"
+  use: "spigotspawns.use"
+  bypass-cooldown: "spigotspawns.bypass.cooldown"
+  bypass-warmup: "spigotspawns.bypass.warmup"
+  bypass-move: "spigotspawns.bypass.move"
+  bypass-jointeleport: "spigotspawns.bypass.jointeleport"
+  silent-join: "spigotspawns.silent.join"
+  update-check: "corespawnx.admin.update-check"
+
+server-site-settings:
+  onJoin:
+    global-joinmessage: true
+    messageType: "actionbar" # actionbar oder chat
+    sound:
+      enabled: true
+      type: "ENTITY_PLAYER_LEVELUP"
+      volume: 1.0
+      pitch: 1.2
+
+settings:
+  warmup: # Delay before the teleport
+    enabled: true # true = activ, false = instant TP
+    seconds: 6
+    cancelOnMove: true # true = breaks teleport on move, false = does not
+    messageType: "actionbar" # actionbar or chat
+    sound:
+      enabled: true
+      type: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+
+  cooldown: # Lockout period after /spawn
+    enabled: false
+    seconds: 60
+    messageType: "actionbar" # actionbar or chat
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_BASS"
+      volume: 1.0
+      pitch: 1.0
+
+  joinTeleport: # Players spawn directly on join?
+    enabled: false
+    message: false
+    messageType: "actionbar" # actionbar or chat
+    sound:
+      enabled: true
+      type: "ENTITY_ENDERMAN_TELEPORT"
+      volume: 1.0
+      pitch: 1.0
+
+  spawn-protection:
+    enabled: true
+    seconds: 15
+    messageType: "actionbar" # actionbar oder chat
+
+  onTeleport:
+    sound:
+      enabled: true
+      type: "ENTITY_ENDERMAN_TELEPORT"
+      volume: 1.0
+      pitch: 1.0
+    particles:
+      enabled: true
+      type: "PORTAL"
+      count: 50
+      offsetX: 0.5
+      offsetY: 1.0
+      offsetZ: 0.5

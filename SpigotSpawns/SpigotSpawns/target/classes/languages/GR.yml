@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aΤο plugin επαναφορτώθηκε!"
+  teleport: "&aΜεταφέρθηκες στο spawn!"
+  no-spawn: "&cΔεν έχει οριστεί spawn ακόμα!"
+  warmup: "&eΤηλεμεταφορά σε %seconds% δευτερόλεπτα..."
+  cancelled: "&cΗ τηλεμεταφορά ακυρώθηκε επειδή κινήθηκες!"
+  set: "&aΤο spawn ορίστηκε επιτυχώς!"
+  cooldown: "&cΈχεις cooldown &e%seconds% &cδευτερολέπτων!"
+  cooldown-ready: "&aΜπορείς να χρησιμοποιήσεις ξανά /spawn!"
+  join-teleport: "&aΜεταφέρθηκες στο spawn κατά την είσοδο!"
+  global-join: "&e%player% μπήκε στον server"
+  no-permission: "&cΔεν έχεις άδεια για αυτή την εντολή."
+  update-available: "&7Ενημέρωση&8: &a%latest% &8(&7Τρέχουσα&8: &c%current%&8) &8| &7Λήψη&8: &6modrinth.com/plugin/spigotspawns-v1"

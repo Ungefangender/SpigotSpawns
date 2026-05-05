@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin reîncărcat!"
+  teleport: "&aAi fost teleportat la spawn!"
+  no-spawn: "&cNu a fost setat încă niciun spawn!"
+  warmup: "&eTeleport în %seconds% secunde..."
+  cancelled: "&cTeleport anulat deoarece te-ai mișcat!"
+  set: "&aSpawn setat cu succes!"
+  cooldown: "&cAi un cooldown de &e%seconds% &csecunde!"
+  cooldown-ready: "&aPoți folosi din nou /spawn!"
+  join-teleport: "&aAi fost teleportat la spawn la intrare!"
+  global-join: "&e%player% s-a conectat pe server"
+  no-permission: "&cNu ai permisiunea de a folosi această comandă."
+  update-available: "&7Actualizare&8: &a%latest% &8(&7Curent&8: &c%current%&8) &8| &7Descarcă&8: &6modrinth.com/plugin/spigotspawns-v1"

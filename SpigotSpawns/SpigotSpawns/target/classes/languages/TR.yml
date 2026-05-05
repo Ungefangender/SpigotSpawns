@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin yeniden yüklendi!"
+  teleport: "&aSpawn noktasına ışınlandın!"
+  no-spawn: "&cHenüz spawn ayarlanmadı!"
+  warmup: "&e%seconds% saniye içinde ışınlanıyorsun..."
+  cancelled: "&cHareket ettiğin için ışınlanma iptal edildi!"
+  set: "&aSpawn başarıyla ayarlandı!"
+  cooldown: "&c%seconds% saniyelik cooldown'un var!"
+  cooldown-ready: "&aArtık /spawn kullanabilirsin!"
+  join-teleport: "&aGirişte spawn noktasına ışınlandın!"
+  global-join: "&e%player% sunucuya katıldı"
+  no-permission: "&cBu komutu kullanma iznin yok."
+  update-available: "&7Güncelleme&8: &a%latest% &8(&7Mevcut&8: &c%current%&8) &8| &7İndir&8: &6modrinth.com/plugin/spigotspawns-v1"

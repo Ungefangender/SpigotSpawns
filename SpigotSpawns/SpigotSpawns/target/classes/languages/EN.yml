@@ -1,0 +1,27 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin has been reloaded!"
+  teleport: "&aYou have been teleported to spawn!"
+  no-spawn: "&cNo spawn has been set yet!"
+  warmup: "&eTeleporting in %seconds% seconds..."
+  cancelled: "&cTeleport cancelled because you moved!"
+  set: "&aSpawn has been set successfully!"
+  cooldown: "&cYou have a cooldown of &e%seconds% &cseconds!"
+  cooldown-ready: "&aYou can now use /spawn again!"
+  join-teleport: "&aYou have been teleported to spawn on join!"
+  global-join: "&e%player% joined the game"
+  no-permission: "&cYou don’t have permission to execute this command."
+  update-available: "&7Update&8: &a%latest% &8(&7Current&8: &c%current%&8) &8| &7Download&8: &6modrinth.com/plugin/spigotspawns-v1"
+  protection: "&aSpawn protection: &e%seconds%s"
+  protection-end: "&cYour spawn protection has ended!"
+  delete: "&7You have deleted the &aSpawn point&7 successfully."
+  already-warmup: "&cYou are already preparing to teleport!"
+
+  spawninfo:
+    header: "&8&l------&e&lSPAWN-LOCATION-INFO&8&l------"
+    world: "&7World: &e%world%"
+    coords: "&7Coordinates: &eX: %x% Y: %y% Z: %z%"
+    rotation: "&7Rotation: &eYaw: %yaw% Pitch: %pitch%"
+    setter: "&7Set by: &e%setter%"
+    time: "&7Set on: &e%time%"

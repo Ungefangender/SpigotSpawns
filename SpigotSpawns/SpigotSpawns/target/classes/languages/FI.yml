@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin ladattu uudelleen!"
+  teleport: "&aSinut teleportattiin spawniin!"
+  no-spawn: "&cSpawnia ei ole vielä asetettu!"
+  warmup: "&eTeleporttaus %seconds% sekunnin kuluttua..."
+  cancelled: "&cTeleporttaus peruttu, koska liikut!"
+  set: "&aSpawn asetettu onnistuneesti!"
+  cooldown: "&cSinulla on cooldown &e%seconds% &csekuntia!"
+  cooldown-ready: "&aVoit käyttää /spawn komentoa uudelleen!"
+  join-teleport: "&aSinut teleportattiin spawniin liittyessäsi!"
+  global-join: "&e%player% liittyi palvelimelle"
+  no-permission: "&cSinulla ei ole oikeuksia tähän komentoon."
+  update-available: "&7Päivitys&8: &a%latest% &8(&7Nykyinen&8: &c%current%&8) &8| &7Lataa&8: &6modrinth.com/plugin/spigotspawns-v1"

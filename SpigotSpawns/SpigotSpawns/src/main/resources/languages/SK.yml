@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin bol znovu načítaný!"
+  teleport: "&aBol si teleportovaný na spawn!"
+  no-spawn: "&cSpawn ešte nebol nastavený!"
+  warmup: "&eTeleport o %seconds% sekúnd..."
+  cancelled: "&cTeleport zrušený, pretože si sa pohol!"
+  set: "&aSpawn bol úspešne nastavený!"
+  cooldown: "&cMáš cooldown &e%seconds% &csekúnd!"
+  cooldown-ready: "&aMôžeš znova použiť /spawn!"
+  join-teleport: "&aBol si teleportovaný na spawn pri pripojení!"
+  global-join: "&e%player% sa pripojil na server"
+  no-permission: "&cNemáš oprávnenie na tento príkaz."
+  update-available: "&7Aktualizácia&8: &a%latest% &8(&7Aktuálna&8: &c%current%&8) &8| &7Stiahnuť&8: &6modrinth.com/plugin/spigotspawns-v1"

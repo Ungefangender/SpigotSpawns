@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin ricaricato!"
+  teleport: "&aSei stato teletrasportato allo spawn!"
+  no-spawn: "&cNessuno spawn è stato impostato!"
+  warmup: "&eTeletrasporto tra %seconds% secondi..."
+  cancelled: "&cTeletrasporto annullato perché ti sei mosso!"
+  set: "&aSpawn impostato con successo!"
+  cooldown: "&cHai un cooldown di &e%seconds% &csecondi!"
+  cooldown-ready: "&aPuoi usare /spawn di nuovo!"
+  join-teleport: "&aSei stato teletrasportato allo spawn al login!"
+  global-join: "&e%player% è entrato nel server"
+  no-permission: "&cNon hai il permesso per eseguire questo comando."
+  update-available: "&7Aggiornamento&8: &a%latest% &8(&7Attuale&8: &c%current%&8) &8| &7Download&8: &6modrinth.com/plugin/spigotspawns-v1"

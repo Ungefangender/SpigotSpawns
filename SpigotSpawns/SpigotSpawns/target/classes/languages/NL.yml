@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin herladen!"
+  teleport: "&aJe bent naar de spawn geteleporteerd!"
+  no-spawn: "&cEr is nog geen spawn ingesteld!"
+  warmup: "&eTeleport over %seconds% seconden..."
+  cancelled: "&cTeleport geannuleerd omdat je bewoog!"
+  set: "&aSpawn succesvol ingesteld!"
+  cooldown: "&cJe hebt een cooldown van &e%seconds% &cseconden!"
+  cooldown-ready: "&aJe kunt /spawn weer gebruiken!"
+  join-teleport: "&aJe bent bij het joinen naar de spawn geteleporteerd!"
+  global-join: "&e%player% heeft de server verlaten"
+  no-permission: "&cJe hebt geen toestemming voor dit commando."
+  update-available: "&7Update&8: &a%latest% &8(&7Huidig&8: &c%current%&8) &8| &7Download&8: &6modrinth.com/plugin/spigotspawns-v1"

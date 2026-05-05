@@ -1,0 +1,13 @@
+name: SpigotSpawns
+version: '26.2_1.0.0'
+main: einfachfabioo.dev.spigotSpawns.SpigotSpawns
+api-version: '1.21'
+authors: [ EinfachFabioo ]
+website: https://discord.voxelcity.de/
+
+commands:
+  spawnadmin:
+    description: Admin spawn commands
+    usage: /spawnadmin setspawn
+  spawn:
+    description: Spawn Command

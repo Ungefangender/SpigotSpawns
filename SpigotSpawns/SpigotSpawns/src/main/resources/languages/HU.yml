@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPlugin újratöltve!"
+  teleport: "&aA spawnhoz teleportáltak!"
+  no-spawn: "&cMég nincs beállítva spawn!"
+  warmup: "&eTeleport %seconds% másodperc múlva..."
+  cancelled: "&cTeleport megszakítva, mert mozogtál!"
+  set: "&aSpawn sikeresen beállítva!"
+  cooldown: "&cVan egy cooldownod: &e%seconds% &cmásodperc!"
+  cooldown-ready: "&aÚjra használhatod a /spawn parancsot!"
+  join-teleport: "&aBelépéskor a spawnhoz teleportáltak!"
+  global-join: "&e%player% csatlakozott a szerverhez"
+  no-permission: "&cNincs jogosultságod ehhez a parancshoz."
+  update-available: "&7Frissítés&8: &a%latest% &8(&7Jelenlegi&8: &c%current%&8) &8| &7Letöltés&8: &6modrinth.com/plugin/spigotspawns-v1"

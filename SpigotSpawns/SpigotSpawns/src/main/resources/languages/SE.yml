@@ -1,0 +1,15 @@
+prefix: "&6SpigotSpawns &8» "
+
+messages:
+  reload: "&aPluginet har laddats om!"
+  teleport: "&aDu har teleporterats till spawn!"
+  no-spawn: "&cIngen spawn har ställts in än!"
+  warmup: "&eTeleport om %seconds% sekunder..."
+  cancelled: "&cTeleport avbruten eftersom du rörde dig!"
+  set: "&aSpawn har ställts in!"
+  cooldown: "&cDu har en cooldown på &e%seconds% &csekunder!"
+  cooldown-ready: "&aDu kan använda /spawn igen!"
+  join-teleport: "&aDu teleporterades till spawn vid anslutning!"
+  global-join: "&e%player% gick med på servern"
+  no-permission: "&cDu har inte behörighet för detta kommando."
+  update-available: "&7Uppdatering&8: &a%latest% &8(&7Nuvarande&8: &c%current%&8) &8| &7Ladda ner&8: &6modrinth.com/plugin/spigotspawns-v1"
