@@ -1,0 +1,128 @@
+# ================================== SpigotSpawns v1.0.0-BETA ==================================
+#           Created By: EinfachFabioo
+#           Last Update: 05/05/2026
+#           Download: https://modrinth.com/project/spigotspawns-v1.0.0
+# ==========================================================================================
+
+# Language Selection
+language: "EN"
+
+# Available Languages
+languages-translated:
+  DE: German
+  EN: English
+  FR: French
+  ES: Spanish
+  IT: Italian
+  NL: Dutch
+  PL: Polish
+  PT: Portuguese
+  RU: Russian
+  TR: Turkish
+  CZ: Czech
+  SK: Slovak
+  HU: Hungarian
+  RO: Romanian
+  BG: Bulgarian
+  GR: Greek
+  SE: Swedish
+  NO: Norwegian
+  DK: Danish
+  FI: Finnish
+
+# ==========================================================================================
+# PERMISSIONS (Use LuckPerms or similar to set these)
+# ==========================================================================================
+# Example: /lp group default permission set spigotspawns.use true
+permissions:
+  admin: "spigotspawns.admin"
+  use: "spigotspawns.use"
+  bypass-cooldown: "spigotspawns.bypass.cooldown"
+  bypass-warmup: "spigotspawns.bypass.warmup"
+  bypass-move: "spigotspawns.bypass.move"
+  bypass-jointeleport: "spigotspawns.bypass.jointeleport"
+  silent-join: "spigotspawns.silent.join"
+  update-check: "spigotspawns.admin.update-check"
+
+# ==========================================================================================
+# UPDATE CHECKER
+# ==========================================================================================
+update-check:
+  enabled: true
+  interval-minutes: 15
+  notify-on-join: true
+  messageType: "chat" # Options: chat, actionbar, console
+
+# ==========================================================================================
+# SERVER SETTINGS
+# ==========================================================================================
+server-site-settings:
+  onJoin:
+    # Global join message for all players
+    global-joinmessage: true
+    messageType: "actionbar" # Options: actionbar, chat
+    sound:
+      enabled: true
+      type: "ENTITY_PLAYER_LEVELUP"
+      volume: 1.0
+      pitch: 1.2
+
+# ==========================================================================================
+# PLUGIN SETTINGS
+# ==========================================================================================
+settings:
+
+  # WARMUP - Delay before teleport
+  warmup:
+    enabled: true
+    seconds: 6
+    cancelOnMove: true
+    messageType: "actionbar" # Options: actionbar, chat
+    sound:
+      enabled: true
+      type: "ENTITY_EXPERIENCE_ORB_PICKUP"
+      volume: 1.0
+      pitch: 1.0
+
+  # COOLDOWN - Lockout period after /spawn
+  cooldown:
+    enabled: false
+    seconds: 60
+    messageType: "actionbar" # Options: actionbar, chat
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_BASS"
+      volume: 1.0
+      pitch: 1.0
+
+  # JOIN TELEPORT - Teleport players to spawn on join
+  joinTeleport:
+    enabled: false
+    message: true
+    messageType: "actionbar" # Options: actionbar, chat
+    sound:
+      enabled: true
+      type: "ENTITY_ENDERMAN_TELEPORT"
+      volume: 1.0
+      pitch: 1.0
+
+  # SPAWN PROTECTION - Protect players from damage after teleport
+  spawn-protection:
+    enabled: true
+    seconds: 15
+    messageType: "actionbar" # Options: actionbar, chat
+
+  # ON TELEPORT - Effects when teleporting to spawn
+  onTeleport:
+    sound:
+      enabled: true
+      type: "ENTITY_ENDERMAN_TELEPORT"
+      volume: 1.0
+      pitch: 1.0
+    particles:
+      enabled: true
+      type: "PORTAL"
+      count: 50
+      offsetX: 0.5
+      offsetY: 1.0
+      offsetZ: 0.5
