@@ -10,10 +10,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class SpawnCommand implements CommandExecutor {
 
@@ -21,9 +27,9 @@ public class SpawnCommand implements CommandExecutor {
     private final LocationManager locationManager;
     private final PermissionManager permissionManager;
 
+    // Task Management
     private final Map<UUID, Integer> warmupTasks = new HashMap<>();
     private final Map<UUID, Long> cooldownMap = new HashMap<>();
-
     private final Map<UUID, Integer> protectionTasks = new HashMap<>();
     private final Set<UUID> protectedPlayers = new HashSet<>();
 
@@ -35,19 +41,20 @@ public class SpawnCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
+        // Check if sender is player
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players!");
+            sender.sendMessage("§cOnly players can use this command!");
             return true;
         }
 
+        // Check permissions
         if (!permissionManager.has(player, "use")) {
             player.sendMessage(getLanguageManager().getMessage("messages.no-permission"));
             return true;
         }
 
+        // Check if spawn is set
         Location spawn = locationManager.getSpawn();
-
         if (spawn == null || spawn.getWorld() == null) {
             player.sendMessage(getLanguageManager().getMessage("messages.no-spawn"));
             return true;
@@ -55,135 +62,150 @@ public class SpawnCommand implements CommandExecutor {
 
         UUID uuid = player.getUniqueId();
 
-        // ❗ Already Warmup (WICHTIG: muss ganz oben sein)
+        // Check if player is already in warmup
         if (warmupTasks.containsKey(uuid)) {
             player.sendMessage(getLanguageManager().getMessage("messages.already-warmup"));
             return true;
         }
 
-        // ⏳ COOLDOWN
-        if (plugin.getConfig().getBoolean("settings.cooldown.enabled")
-                && !permissionManager.has(player, "bypass.cooldown")) {
-
-            int cooldownSeconds = plugin.getConfig().getInt("settings.cooldown.seconds");
-            String type = plugin.getConfig().getString("settings.cooldown.messageType");
-
-            if (cooldownMap.containsKey(uuid)) {
-                long timeLeft = cooldownSeconds - ((System.currentTimeMillis() - cooldownMap.get(uuid)) / 1000);
-
-                if (timeLeft > 0) {
-                    String msg = getLanguageManager().getMessage("messages.cooldown")
-                            .replace("%seconds%", String.valueOf(timeLeft));
-
-                    send(player, msg, type);
-                    playSound(player, "settings.cooldown.sound");
-                    return true;
-                }
-            }
-        }
-
-        // ⏱ Warmup starten
-        boolean warmupEnabled = plugin.getConfig().getBoolean("settings.warmup.enabled");
-
-        // ⚡ Bypass oder deaktiviert → sofort TP
-        if (!warmupEnabled || permissionManager.has(player, "bypass.warmup")) {
-            teleport(player, spawn, uuid);
+        // Check cooldown
+        if (!checkCooldown(player, uuid)) {
             return true;
         }
 
-        // ❗ Ab hier ist Warmup garantiert aktiv
-        int seconds = plugin.getConfig().getInt("settings.warmup.seconds");
-        String type = plugin.getConfig().getString("settings.warmup.messageType");
+        // Check if warmup is enabled
+        boolean warmupEnabled = plugin.getConfig().getBoolean("settings.warmup.enabled");
+        boolean hasBypassWarmup = permissionManager.has(player, "bypass.warmup");
 
-        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+        if (!warmupEnabled || hasBypassWarmup) {
+            // Direct teleport without warmup
+            performTeleport(player, spawn, uuid);
+            return true;
+        }
 
-            int timeLeft = seconds;
+        // Start warmup
+        startWarmup(player, spawn, uuid);
+        return true;
+    }
 
-            @Override
-            public void run() {
+    private boolean checkCooldown(Player player, UUID uuid) {
+        boolean cooldownEnabled = plugin.getConfig().getBoolean("settings.cooldown.enabled");
+        
+        if (!cooldownEnabled) {
+            return true;
+        }
 
-                if (timeLeft <= 0) {
+        boolean hasBypassCooldown = permissionManager.has(player, "bypass.cooldown");
+        if (hasBypassCooldown) {
+            return true;
+        }
 
-                    teleport(player, spawn, uuid);
+        int cooldownSeconds = plugin.getConfig().getInt("settings.cooldown.seconds");
+        String messageType = plugin.getConfig().getString("settings.cooldown.messageType");
 
-                    Integer id = warmupTasks.remove(uuid);
-                    if (id != null) Bukkit.getScheduler().cancelTask(id);
+        if (!cooldownMap.containsKey(uuid)) {
+            return true;
+        }
 
-                    return;
-                }
+        long timePassed = (System.currentTimeMillis() - cooldownMap.get(uuid)) / 1000;
+        long timeLeft = cooldownSeconds - timePassed;
 
-                String msg = getLanguageManager().getMessage("messages.warmup")
-                        .replace("%seconds%", String.valueOf(timeLeft));
-
-                send(player, msg, type);
-                playSound(player, "settings.warmup.sound");
-
-                timeLeft--;
-            }
-
-        }, 0L, 20L);
-
-        warmupTasks.put(uuid, taskId);
+        if (timeLeft > 0) {
+            String msg = getLanguageManager().getMessage("messages.cooldown")
+                    .replace("%seconds%", String.valueOf(timeLeft));
+            sendMessage(player, msg, messageType);
+            playSound(player, "settings.cooldown.sound");
+            return false;
+        }
 
         return true;
     }
 
-    private void teleport(Player player, Location spawn, UUID uuid) {
+    private void startWarmup(Player player, Location spawn, UUID uuid) {
+        int warmupSeconds = plugin.getConfig().getInt("settings.warmup.seconds");
+        String messageType = plugin.getConfig().getString("settings.warmup.messageType");
 
-        player.teleport(spawn);
+        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            int secondsLeft = warmupSeconds;
 
-        playTeleportSound(player);
-        spawnParticles(player);
+            @Override
+            public void run() {
+                if (secondsLeft <= 0) {
+                    // Warmup finished - perform teleport
+                    performTeleport(player, spawn, uuid);
+                    warmupTasks.remove(uuid);
+                    Bukkit.getScheduler().cancelTask(this.hashCode());
+                    return;
+                }
 
-        player.sendMessage(getLanguageManager().getMessage("messages.teleport"));
+                // Send warmup message
+                String msg = getLanguageManager().getMessage("messages.warmup")
+                        .replace("%seconds%", String.valueOf(secondsLeft));
+                sendMessage(player, msg, messageType);
+                playSound(player, "settings.warmup.sound");
 
-        cooldownMap.put(uuid, System.currentTimeMillis());
+                secondsLeft--;
+            }
+        }, 0L, 20L);
 
-        startProtection(player);
+        warmupTasks.put(uuid, taskId);
     }
 
-    private void startProtection(Player player) {
+    private void performTeleport(Player player, Location spawn, UUID uuid) {
+        // Teleport player
+        player.teleport(spawn);
 
-        if (!plugin.getConfig().getBoolean("settings.spawn-protection.enabled")) return;
+        // Effects
+        playTeleportSound(player);
+        spawnTeleportParticles(player);
 
-        UUID uuid = player.getUniqueId();
+        // Message
+        player.sendMessage(getLanguageManager().getMessage("messages.teleport"));
 
-        int seconds = plugin.getConfig().getInt("settings.spawn-protection.seconds");
-        String type = plugin.getConfig().getString("settings.spawn-protection.messageType");
+        // Add to cooldown
+        cooldownMap.put(uuid, System.currentTimeMillis());
+
+        // Start protection
+        startProtection(player, uuid);
+    }
+
+    private void startProtection(Player player, UUID uuid) {
+        boolean protectionEnabled = plugin.getConfig().getBoolean("settings.spawn-protection.enabled");
+        if (!protectionEnabled) {
+            return;
+        }
+
+        int protectionSeconds = plugin.getConfig().getInt("settings.spawn-protection.seconds");
+        String messageType = plugin.getConfig().getString("settings.spawn-protection.messageType");
 
         protectedPlayers.add(uuid);
 
+        // Cancel existing protection task if any
         if (protectionTasks.containsKey(uuid)) {
             Bukkit.getScheduler().cancelTask(protectionTasks.get(uuid));
         }
 
         int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-
-            int timeLeft = seconds;
+            int secondsLeft = protectionSeconds;
 
             @Override
             public void run() {
-
-                if (timeLeft <= 0) {
-
+                if (secondsLeft <= 0) {
+                    // Protection ended
                     protectedPlayers.remove(uuid);
-
                     player.sendMessage(getLanguageManager().getMessage("messages.protection-end"));
-
-                    Integer id = protectionTasks.remove(uuid);
-                    if (id != null) Bukkit.getScheduler().cancelTask(id);
-
+                    protectionTasks.remove(uuid);
+                    Bukkit.getScheduler().cancelTask(this.hashCode());
                     return;
                 }
 
+                // Send protection message
                 String msg = getLanguageManager().getMessage("messages.protection")
-                        .replace("%seconds%", String.valueOf(timeLeft));
+                        .replace("%seconds%", String.valueOf(secondsLeft));
+                sendMessage(player, msg, messageType);
 
-                send(player, msg, type);
-
-                timeLeft--;
+                secondsLeft--;
             }
-
         }, 0L, 20L);
 
         protectionTasks.put(uuid, taskId);
@@ -196,29 +218,53 @@ public class SpawnCommand implements CommandExecutor {
     public void cancelWarmup(Player player) {
         UUID uuid = player.getUniqueId();
 
-        Integer id = warmupTasks.remove(uuid);
-
-        if (id != null) {
-            Bukkit.getScheduler().cancelTask(id);
+        if (warmupTasks.containsKey(uuid)) {
+            Integer taskId = warmupTasks.remove(uuid);
+            if (taskId != null) {
+                Bukkit.getScheduler().cancelTask(taskId);
+            }
             player.sendMessage(getLanguageManager().getMessage("messages.cancelled"));
         }
     }
 
-    private void playSound(Player player, String path) {
+    // ============================
+    // HELPER METHODS
+    // ============================
 
-        if (!plugin.getConfig().getBoolean(path + ".enabled")) return;
+    private void sendMessage(Player player, String message, String type) {
+        if (message == null || message.isEmpty()) {
+            return;
+        }
+
+        if ("actionbar".equalsIgnoreCase(type)) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+        } else {
+            player.sendMessage(message);
+        }
+    }
+
+    private void playSound(Player player, String configPath) {
+        boolean soundEnabled = plugin.getConfig().getBoolean(configPath + ".enabled");
+        if (!soundEnabled) {
+            return;
+        }
 
         try {
-            String soundName = plugin.getConfig().getString(path + ".type");
-            float volume = (float) plugin.getConfig().getDouble(path + ".volume");
-            float pitch = (float) plugin.getConfig().getDouble(path + ".pitch");
+            String soundName = plugin.getConfig().getString(configPath + ".type");
+            double volume = plugin.getConfig().getDouble(configPath + ".volume");
+            double pitch = plugin.getConfig().getDouble(configPath + ".pitch");
+
+            if (soundName == null || soundName.isEmpty()) {
+                return;
+            }
 
             Sound sound = Sound.valueOf(soundName.toUpperCase());
+            player.playSound(player.getLocation(), sound, (float) volume, (float) pitch);
 
-            player.playSound(player.getLocation(), sound, volume, pitch);
-
+        } catch (IllegalArgumentException e) {
+            plugin.getLogger().warning("Invalid sound type at path: " + configPath);
         } catch (Exception e) {
-            plugin.getLogger().warning("Invalid sound: " + path);
+            plugin.getLogger().warning("Error playing sound at path: " + configPath);
         }
     }
 
@@ -226,44 +272,32 @@ public class SpawnCommand implements CommandExecutor {
         playSound(player, "settings.onTeleport.sound");
     }
 
-    private void spawnParticles(Player player) {
-
-        if (!plugin.getConfig().getBoolean("settings.onTeleport.particles.enabled")) return;
+    private void spawnTeleportParticles(Player player) {
+        boolean particlesEnabled = plugin.getConfig().getBoolean("settings.onTeleport.particles.enabled");
+        if (!particlesEnabled) {
+            return;
+        }
 
         try {
-            Particle particle = Particle.valueOf(
-                    plugin.getConfig().getString("settings.onTeleport.particles.type").toUpperCase()
-            );
+            String particleType = plugin.getConfig().getString("settings.onTeleport.particles.type");
+            if (particleType == null || particleType.isEmpty()) {
+                return;
+            }
 
-            player.getWorld().spawnParticle(
-                    particle,
-                    player.getLocation(),
-                    plugin.getConfig().getInt("settings.onTeleport.particles.count"),
-                    plugin.getConfig().getDouble("settings.onTeleport.particles.offsetX"),
-                    plugin.getConfig().getDouble("settings.onTeleport.particles.offsetY"),
-                    plugin.getConfig().getDouble("settings.onTeleport.particles.offsetZ")
-            );
+            Particle particle = Particle.valueOf(particleType.toUpperCase());
+            int count = plugin.getConfig().getInt("settings.onTeleport.particles.count");
+            double offsetX = plugin.getConfig().getDouble("settings.onTeleport.particles.offsetX");
+            double offsetY = plugin.getConfig().getDouble("settings.onTeleport.particles.offsetY");
+            double offsetZ = plugin.getConfig().getDouble("settings.onTeleport.particles.offsetZ");
 
-        } catch (Exception e) {
+            player.getWorld().spawnParticle(particle, player.getLocation(), count, offsetX, offsetY, offsetZ);
+
+        } catch (IllegalArgumentException e) {
             plugin.getLogger().warning("Invalid particle type!");
+        } catch (Exception e) {
+            plugin.getLogger().warning("Error spawning particles!");
         }
     }
-
-    private void send(Player player, String msg, String type) {
-
-        if ("actionbar".equalsIgnoreCase(type)) {
-            player.spigot().sendMessage(
-                    ChatMessageType.ACTION_BAR,
-                    new TextComponent(msg)
-            );
-        } else {
-            player.sendMessage(msg);
-        }
-    }
-
-    // ======================
-    // 🔄 GET LANGUAGE MANAGER
-    // ======================
 
     private LanguageManager getLanguageManager() {
         return plugin.getLanguageManager();
